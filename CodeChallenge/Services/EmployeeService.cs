@@ -32,12 +32,13 @@ namespace CodeChallenge.Services
 
         public Employee GetById(string id)
         {
+            Employee employee = null;
             if(!String.IsNullOrEmpty(id))
             {
-                return _employeeRepository.GetById(id);
+                employee = _employeeRepository.GetById(id);
             }
 
-            return null;
+            return employee;
         }
 
         public Employee Replace(Employee originalEmployee, Employee newEmployee)

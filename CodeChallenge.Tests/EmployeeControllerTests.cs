@@ -45,17 +45,17 @@ namespace CodeCodeChallenge.Tests.Integration
                 LastName = "Downer",
                 Position = "Receiver",
             };
-
+        
             var requestContent = new JsonSerialization().ToJson(employee);
-
+        
             // Execute
             var postRequestTask = _httpClient.PostAsync("api/employee",
                new StringContent(requestContent, Encoding.UTF8, "application/json"));
             var response = postRequestTask.Result;
-
+        
             // Assert
             Assert.AreEqual(HttpStatusCode.Created, response.StatusCode);
-
+        
             var newEmployee = response.DeserializeContent<Employee>();
             Assert.IsNotNull(newEmployee.EmployeeId);
             Assert.AreEqual(employee.FirstName, newEmployee.FirstName);
@@ -63,7 +63,7 @@ namespace CodeCodeChallenge.Tests.Integration
             Assert.AreEqual(employee.Department, newEmployee.Department);
             Assert.AreEqual(employee.Position, newEmployee.Position);
         }
-
+        
         [TestMethod]
         public void GetEmployeeById_Returns_Ok()
         {
@@ -71,18 +71,18 @@ namespace CodeCodeChallenge.Tests.Integration
             var employeeId = "16a596ae-edd3-4847-99fe-c4518e82c86f";
             var expectedFirstName = "John";
             var expectedLastName = "Lennon";
-
+        
             // Execute
             var getRequestTask = _httpClient.GetAsync($"api/employee/{employeeId}");
             var response = getRequestTask.Result;
-
+        
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
             var employee = response.DeserializeContent<Employee>();
             Assert.AreEqual(expectedFirstName, employee.FirstName);
             Assert.AreEqual(expectedLastName, employee.LastName);
         }
-
+        
         [TestMethod]
         public void UpdateEmployee_Returns_Ok()
         {
@@ -96,7 +96,7 @@ namespace CodeCodeChallenge.Tests.Integration
                 Position = "Developer VI",
             };
             var requestContent = new JsonSerialization().ToJson(employee);
-
+        
             // Execute
             var putRequestTask = _httpClient.PutAsync($"api/employee/{employee.EmployeeId}",
                new StringContent(requestContent, Encoding.UTF8, "application/json"));
@@ -105,11 +105,11 @@ namespace CodeCodeChallenge.Tests.Integration
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, putResponse.StatusCode);
             var newEmployee = putResponse.DeserializeContent<Employee>();
-
+        
             Assert.AreEqual(employee.FirstName, newEmployee.FirstName);
             Assert.AreEqual(employee.LastName, newEmployee.LastName);
         }
-
+        
         [TestMethod]
         public void UpdateEmployee_Returns_NotFound()
         {
@@ -123,19 +123,19 @@ namespace CodeCodeChallenge.Tests.Integration
                 Position = "Singer/Song Writer",
             };
             var requestContent = new JsonSerialization().ToJson(employee);
-
+        
             // Execute
             var postRequestTask = _httpClient.PutAsync($"api/employee/{employee.EmployeeId}",
                new StringContent(requestContent, Encoding.UTF8, "application/json"));
             var response = postRequestTask.Result;
-
+        
             // Assert
             Assert.AreEqual(HttpStatusCode.NotFound, response.StatusCode);
         }
         
         
         [TestMethod]
-        public void GetEmployee_Includes_Direct_Reports()
+        public void GetEmployeeById_Includes_DirectReports()
         {
             // Arrange
             var employeeId = "16a596ae-edd3-4847-99fe-c4518e82c86f";

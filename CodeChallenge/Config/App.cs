@@ -13,6 +13,8 @@ namespace CodeChallenge.Config
 {
     public class App
     {
+        private EmployeeContext _employeeContext;
+
         public WebApplication Configure(string[] args)
         {
             args ??= Array.Empty<string>();
@@ -23,15 +25,23 @@ namespace CodeChallenge.Config
             
             AddServices(builder.Services);
 
-            var app = builder.Build();
-
             var env = builder.Environment;
+            
+            if (env.IsDevelopment())
+            {
+                SeedEmployeeDB();
+                // ensure there is never more than one EmployeeContext
+                // creating new EmployeeContext resulted in in-memory bug with DirectReports
+                builder.Services.AddSingleton(x => _employeeContext);
+            }
+            
+            var app = builder.Build();
+            
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                SeedEmployeeDB();
             }
-
+            
             app.UseAuthorization();
 
             app.MapControllers();
@@ -41,7 +51,6 @@ namespace CodeChallenge.Config
 
         private void AddServices(IServiceCollection services)
         {
-
             services.AddScoped<IEmployeeService, EmployeeService>();
             services.AddScoped<IEmployeeRepository, EmployeeRespository>();
 
@@ -50,10 +59,11 @@ namespace CodeChallenge.Config
 
         private void SeedEmployeeDB()
         {
-            new EmployeeDataSeeder(
-                new EmployeeContext(
-                    new DbContextOptionsBuilder<EmployeeContext>().UseInMemoryDatabase("EmployeeDB").Options
-            )).Seed().Wait();
+            _employeeContext = new EmployeeContext(
+                new DbContextOptionsBuilder<EmployeeContext>()
+                    .UseInMemoryDatabase("EmployeeDB").Options
+            );
+            new EmployeeDataSeeder(_employeeContext).Seed().Wait();
         }
     }
 }
