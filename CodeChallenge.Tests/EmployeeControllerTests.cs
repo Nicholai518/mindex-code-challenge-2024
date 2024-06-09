@@ -132,5 +132,23 @@ namespace CodeCodeChallenge.Tests.Integration
             // Assert
             Assert.AreEqual(HttpStatusCode.NotFound, response.StatusCode);
         }
+        
+        
+        [TestMethod]
+        public void GetEmployee_Includes_Direct_Reports()
+        {
+            // Arrange
+            var employeeId = "16a596ae-edd3-4847-99fe-c4518e82c86f";
+            
+            // Execute
+            var getRequestTask = _httpClient.GetAsync($"api/employee/{employeeId}");
+            var response = getRequestTask.Result;
+
+            // Assert
+            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+            var employee = response.DeserializeContent<Employee>();
+
+            Assert.IsNotNull(employee.DirectReports);
+        }
     }
 }
