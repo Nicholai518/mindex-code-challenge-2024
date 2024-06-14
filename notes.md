@@ -41,13 +41,24 @@ Create Compensation
 
 Create two new Compensation REST endpoints: 
 - POST
+- Inlcude employee id in POST request, does not make sense to include entire employee
+- Then use the employee service to get the employee for Compensation
+
 - GET (EmployeeID)
 
  These should persist and query the Compensation from the persistence layer.
 
  Naming Error: "EmployeeRespository.cs"
 
- - Inlcude employee id in POST request, does not make sense to include entire employee
- - Then use the employee service to get the employee for Compensation
+
+Write tests:
+Write a test to create compensation for John Lennon  (Successful)
+Write a test to create and read compensation for Paul McCartney (Successful)
 
 
+### Final thoughts / Steps
+- Solved bug / issue with Direct Reports and in-memory db
+- All endpoints working correctly
+- All tests run successfully: Open "Tests" file > "Run All" > All Successful
+- Make git repo public
+- Respond to Mark's email
