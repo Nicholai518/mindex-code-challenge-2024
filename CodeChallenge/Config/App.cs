@@ -1,9 +1,7 @@
 ﻿using System;
-
 using CodeChallenge.Data;
 using CodeChallenge.Repositories;
 using CodeChallenge.Services;
-
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -14,6 +12,7 @@ namespace CodeChallenge.Config
     public class App
     {
         private EmployeeContext _employeeContext;
+        private CompensationContext _compensationContext;
 
         public WebApplication Configure(string[] args)
         {
@@ -22,11 +21,12 @@ namespace CodeChallenge.Config
             var builder = WebApplication.CreateBuilder(args);
 
             builder.UseEmployeeDB();
-            
+            builder.UseCompensationDB();
+
             AddServices(builder.Services);
 
             var env = builder.Environment;
-            
+
             if (env.IsDevelopment())
             {
                 SeedEmployeeDB();
@@ -34,14 +34,14 @@ namespace CodeChallenge.Config
                 // creating new EmployeeContext resulted in in-memory bug with DirectReports
                 builder.Services.AddSingleton(x => _employeeContext);
             }
-            
+
             var app = builder.Build();
-            
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
-            
+
             app.UseAuthorization();
 
             app.MapControllers();
@@ -53,6 +53,8 @@ namespace CodeChallenge.Config
         {
             services.AddScoped<IEmployeeService, EmployeeService>();
             services.AddScoped<IEmployeeRepository, EmployeeRespository>();
+            services.AddScoped<ICompensationService, CompensationService>();
+            services.AddScoped<ICompensationRepository, CompensationRepository>();
 
             services.AddControllers();
         }
@@ -62,6 +64,15 @@ namespace CodeChallenge.Config
             _employeeContext = new EmployeeContext(
                 new DbContextOptionsBuilder<EmployeeContext>()
                     .UseInMemoryDatabase("EmployeeDB").Options
+            );
+            new EmployeeDataSeeder(_employeeContext).Seed().Wait();
+        }
+
+        private void LoadCompensationDB()
+        {
+            _compensationContext = new CompensationContext(
+                new DbContextOptionsBuilder<CompensationContext>()
+                    .UseInMemoryDatabase("CompensationDB").Options
             );
             new EmployeeDataSeeder(_employeeContext).Seed().Wait();
         }
