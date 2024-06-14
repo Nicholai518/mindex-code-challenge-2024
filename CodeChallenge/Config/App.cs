@@ -30,9 +30,12 @@ namespace CodeChallenge.Config
             if (env.IsDevelopment())
             {
                 SeedEmployeeDB();
+                LoadCompensationDB();
+
                 // ensure there is never more than one EmployeeContext
                 // creating new EmployeeContext resulted in in-memory bug with DirectReports
                 builder.Services.AddSingleton(x => _employeeContext);
+                builder.Services.AddSingleton(x => _compensationContext);
             }
 
             var app = builder.Build();
@@ -74,7 +77,6 @@ namespace CodeChallenge.Config
                 new DbContextOptionsBuilder<CompensationContext>()
                     .UseInMemoryDatabase("CompensationDB").Options
             );
-            new EmployeeDataSeeder(_employeeContext).Seed().Wait();
         }
     }
 }

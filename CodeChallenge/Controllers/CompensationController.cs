@@ -31,18 +31,24 @@ public class CompensationController : ControllerBase
 
         Employee employee = _employeeService.GetById(compensation.Employee.EmployeeId);
 
+        if (employee == null)
+        {
+            return BadRequest();
+        }
+
         compensation.Employee = employee;
+
         _compensationService.Create(compensation);
 
-        return CreatedAtRoute("getCompensationById", new { id = compensation.Employee.EmployeeId }, compensation);
+        return CreatedAtRoute("getCompensationById", new { employeeId = compensation.Employee.EmployeeId }, compensation);
     }
 
-    [HttpGet("{id}", Name = "getCompensationById")]
-    public IActionResult GetCompensationById(String id)
+    [HttpGet("{employeeId}", Name = "getCompensationById")]
+    public IActionResult GetCompensationById(String employeeId)
     {
-        _logger.LogDebug($"Received compensation get request for employee '{id}'");
+        _logger.LogDebug($"Received compensation get request for employee '{employeeId}'");
 
-        var compensation = _compensationService.GetById(id);
+        var compensation = _compensationService.GetById(employeeId);
 
         if (compensation == null)
             return NotFound();

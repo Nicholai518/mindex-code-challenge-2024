@@ -77,5 +77,67 @@ namespace CodeChallenge.Tests.Integration
             Assert.AreEqual(expectedSalary, newCompensation.Salary);
             Assert.AreEqual(expectedEffectiveDate, newCompensation.EffectiveDate);
         }
+
+
+        [TestMethod]
+        public void CreateAndGetCompensationForPaulMcCartney_Returns_OK()
+        {
+            // Arrange
+            var expectedEmployeeId = "b7839309-3348-463b-a7e3-5de1c168beb3";
+            var expectedFirstName = "Paul";
+            var expectedLastName = "McCartney";
+            var expectedDepartment = "Engineering";
+            var expectedPosition = "Developer I";
+            var expectedSalary = 80000.00;
+            var expectedEffectiveDate = new DateTime(2015, 12, 25);
+
+            Employee paulMcCartney = new Employee();
+            paulMcCartney.EmployeeId = expectedEmployeeId;
+            var compensation = new Compensation()
+            {
+                Employee = paulMcCartney,
+                Salary = expectedSalary,
+                EffectiveDate = expectedEffectiveDate
+            };
+
+            var requestContent = new JsonSerialization().ToJson(compensation);
+
+            // Execute
+            var postRequestTask = _httpClient.PostAsync("api/compensation",
+                new StringContent(requestContent, Encoding.UTF8, "application/json"));
+            var createResponse = postRequestTask.Result;
+
+            // Assert
+            Assert.AreEqual(HttpStatusCode.Created, createResponse.StatusCode);
+
+            var newCompensation = createResponse.DeserializeContent<Compensation>();
+            Assert.IsNotNull(newCompensation.CompensationId);
+            Assert.AreEqual(expectedEmployeeId, newCompensation.Employee.EmployeeId);
+            Assert.AreEqual(expectedFirstName, newCompensation.Employee.FirstName);
+            Assert.AreEqual(expectedLastName, newCompensation.Employee.LastName);
+            Assert.AreEqual(expectedDepartment, newCompensation.Employee.Department);
+            Assert.AreEqual(expectedPosition, newCompensation.Employee.Position);
+            Assert.AreEqual(expectedSalary, newCompensation.Salary);
+            Assert.AreEqual(expectedEffectiveDate, newCompensation.EffectiveDate);
+
+
+            // GET 
+            
+            var getRequestTask = _httpClient.GetAsync($"api/compensation/{expectedEmployeeId}");
+            var getResponse = getRequestTask.Result;
+
+
+            // Assert
+            Assert.AreEqual(HttpStatusCode.OK, getResponse.StatusCode);
+            var getCompensation = getResponse.DeserializeContent<Compensation>();
+            Assert.IsNotNull(newCompensation.CompensationId);
+            Assert.AreEqual(expectedEmployeeId, getCompensation.Employee.EmployeeId);
+            Assert.AreEqual(expectedFirstName, getCompensation.Employee.FirstName);
+            Assert.AreEqual(expectedLastName, getCompensation.Employee.LastName);
+            Assert.AreEqual(expectedDepartment, getCompensation.Employee.Department);
+            Assert.AreEqual(expectedPosition, getCompensation.Employee.Position);
+            Assert.AreEqual(expectedSalary, getCompensation.Salary);
+            Assert.AreEqual(expectedEffectiveDate, getCompensation.EffectiveDate);
+        }
     }
 }
