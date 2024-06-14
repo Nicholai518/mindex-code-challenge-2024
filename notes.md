@@ -31,3 +31,23 @@ Write tests:
 Write a test for John Lennon to confirm 4 Direct Reports
 Write a test for Paul McCartney to confirm 0 Direct Reports
 Write a test for an invalid employee id
+
+
+### Task 2
+Create Compensation
+- Employee
+- Salary
+- Effective Date
+
+Create two new Compensation REST endpoints: 
+- POST
+- GET (EmployeeID)
+
+ These should persist and query the Compensation from the persistence layer.
+
+ Naming Error: "EmployeeRespository.cs"
+
+ - Inlcude employee id in POST request, does not make sense to include entire employee
+ - Then use the employee service to get the employee for Compensation
+
+

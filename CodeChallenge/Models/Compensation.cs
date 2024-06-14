@@ -12,12 +12,5 @@ namespace CodeChallenge.Models
         public Compensation()
         {
         }
-
-        // public Compensation(Employee employee, double salary, DateTime effectiveDate)
-        // {
-        //     this.Employee = employee;
-        //     this.Salary = salary;
-        //     this.EffectiveDate = effectiveDate;
-        // }
     }
 }

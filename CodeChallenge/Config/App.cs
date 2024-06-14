@@ -32,8 +32,8 @@ namespace CodeChallenge.Config
                 SeedEmployeeDB();
                 LoadCompensationDB();
 
-                // ensure there is never more than one EmployeeContext
-                // creating new EmployeeContext resulted in in-memory bug with DirectReports
+                // ensure there is never more than one EmployeeContext / CompensationContext
+                // creating new EmployeeContext resulted in in-memory bug with DirectReports during initial set up
                 builder.Services.AddSingleton(x => _employeeContext);
                 builder.Services.AddSingleton(x => _compensationContext);
             }

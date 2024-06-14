@@ -3,12 +3,8 @@ using System.Net;
 using System.Net.Http;
 using System.Text;
 using CodeChallenge.Models;
-using CodeChallenge.Repositories;
-using CodeChallenge.Services;
 using CodeCodeChallenge.Tests.Integration.Extensions;
 using CodeCodeChallenge.Tests.Integration.Helpers;
-using Microsoft.Extensions.Logging;
-using Microsoft.VisualStudio.TestPlatform.Common.Exceptions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace CodeChallenge.Tests.Integration
@@ -122,7 +118,6 @@ namespace CodeChallenge.Tests.Integration
 
 
             // GET 
-            
             var getRequestTask = _httpClient.GetAsync($"api/compensation/{expectedEmployeeId}");
             var getResponse = getRequestTask.Result;
 
